@@ -21,7 +21,7 @@ impl ClassFile {
     ///
     /// # Examples
     /// ```rust
-    /// ClassFile class_file;
+    /// let class_file = ClassFile::new();
     /// class_file.read_file("MyClass.class");
     /// match class_file {
     ///     Ok(f) => println!(f.magic_number),
