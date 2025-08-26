@@ -3,6 +3,9 @@ This is an educational project to implement a somewhat Java 8 compliant JVM in R
 
 Java 8 specification can be found [here](https://docs.oracle.com/javase/specs/jvms/se8/html/index.html).
 
+### Disclaimer
+I almost never write Rust; I'm trying to give this language another chance - do not expect the most idiomatic Rust code here.
+
 ## Major Milestones Roadmap
 ### 1. Parse Class Files [IN PROGRESS]
 - [X] Read magic number
