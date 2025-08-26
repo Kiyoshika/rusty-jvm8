@@ -39,6 +39,17 @@ impl ClassFile {
         Ok(())
     }
 
+    fn parse_magic_number(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+        let mut buffer = vec![0; 4];
+        self.read_bytes(reader, &mut buffer, 4)?;
+        self.magic_number = self.vec_to_u32(&buffer);
+        if self.magic_number != 0xCAFEBABE {
+            return Err(io::Error::new(io::ErrorKind::Other, "Invalid magic number"));
+        }
+
+        Ok(())
+    }
+
     fn parse_minor_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         let mut buffer = vec![0; 2];
         self.read_bytes(reader, &mut buffer, 2)?;
@@ -96,17 +107,6 @@ impl ClassFile {
         let mut bytes = [0; 8];
         bytes.copy_from_slice(&buffer[0..8]);
         u64::from_be_bytes(bytes)
-    }
-
-    fn parse_magic_number(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
-        let mut buffer = vec![0; 4];
-        self.read_bytes(reader, &mut buffer, 4)?;
-        self.magic_number = self.vec_to_u32(&buffer);
-        if self.magic_number != 0xCAFEBABE {
-            return Err(io::Error::new(io::ErrorKind::Other, "Invalid magic number"));
-        }
-
-        Ok(())
     }
 }
 
