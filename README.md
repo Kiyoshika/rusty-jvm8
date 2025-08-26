@@ -6,8 +6,8 @@ Java 8 specification can be found [here](https://docs.oracle.com/javase/specs/jv
 ## Major Milestones Roadmap
 ### 1. Parse Class Files [IN PROGRESS]
 - [X] Read magic number
-- [ ] Read minor version
-- [ ] Read major version
+- [X] Read minor version
+- [X] Read major version
 - [ ] Read constant pool
 - [ ] Read access flags
 - [ ] Read this class

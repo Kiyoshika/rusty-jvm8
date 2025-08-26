@@ -1,0 +1,1 @@
+This is a class file compiled with Java 11 (specifically `11.0.28-amzn`) which is too new for our JVM. Should expect an error.
