@@ -1,11 +1,15 @@
+use crate::class_file::constant_pool::constant_pool::ConstantPool;
+use crate::util::bytes::{vec_to_u16, vec_to_u32};
+use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::{BufReader, Read};
+use std::io::BufReader;
 
 pub struct ClassFile {
     magic_number: u32,
     minor_version: u16,
     major_version: u16,
+    constant_pool: ConstantPool,
 }
 
 impl ClassFile {
@@ -14,6 +18,7 @@ impl ClassFile {
             magic_number: 0,
             minor_version: 0,
             major_version: 0,
+            constant_pool: ConstantPool::new(),
         }
     }
 
@@ -25,7 +30,7 @@ impl ClassFile {
     /// class_file.read_file("MyClass.class");
     /// match class_file {
     ///     Ok(f) => println!(f.magic_number),
-    ///     Err(e) => println!("Error reading classfile: {e:?}"),
+    ///     Err(e) => println!("Error reading class_file: {e:?}"),
     /// }
     /// ```
     pub fn read_file(&mut self, file_path: &str) -> Result<(), io::Error> {
@@ -35,14 +40,15 @@ impl ClassFile {
         self.parse_magic_number(&mut reader)?;
         self.parse_minor_version(&mut reader)?;
         self.parse_major_version(&mut reader)?;
+        self.parse_constant_pool(&mut reader)?;
 
         Ok(())
     }
 
     fn parse_magic_number(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         let mut buffer = vec![0; 4];
-        self.read_bytes(reader, &mut buffer, 4)?;
-        self.magic_number = self.vec_to_u32(&buffer);
+        read_bytes(reader, &mut buffer, 4)?;
+        self.magic_number = vec_to_u32(&buffer);
         if self.magic_number != 0xCAFEBABE {
             return Err(io::Error::new(io::ErrorKind::Other, "Invalid magic number"));
         }
@@ -52,15 +58,15 @@ impl ClassFile {
 
     fn parse_minor_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         let mut buffer = vec![0; 2];
-        self.read_bytes(reader, &mut buffer, 2)?;
-        self.minor_version = self.vec_to_u16(&mut buffer);
+        read_bytes(reader, &mut buffer, 2)?;
+        self.minor_version = vec_to_u16(&buffer);
         Ok(())
     }
 
     fn parse_major_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         let mut buffer = vec![0; 2];
-        self.read_bytes(reader, &mut buffer, 2)?;
-        self.major_version = self.vec_to_u16(&mut buffer);
+        read_bytes(reader, &mut buffer, 2)?;
+        self.major_version = vec_to_u16(&buffer);
         if self.major_version > 52 {
             return Err(io::Error::new(
                 io::ErrorKind::Other,
@@ -70,43 +76,19 @@ impl ClassFile {
         Ok(())
     }
 
-    fn read_bytes(
-        &mut self,
-        reader: &mut BufReader<File>,
-        buffer: &mut Vec<u8>,
-        n_bytes: usize,
-    ) -> Result<(), io::Error> {
-        let bytes_read = reader.read(buffer)?;
-        if bytes_read != n_bytes {
-            return Err(io::Error::new(
-                io::ErrorKind::Other,
-                format!("Expected to read {n_bytes} bytes but instead only read {bytes_read}"),
-            ));
+    fn parse_constant_pool(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+        // first get size of constant pool
+        let mut buffer = vec![0; 2];
+        read_bytes(reader, &mut buffer, 2)?;
+        let constant_pool_count = vec_to_u16(&buffer);
+        self.constant_pool.set_size(constant_pool_count);
+
+        // parse all constant pool items
+        for i in 0..constant_pool_count {
+            self.constant_pool.parse_item_from_class_file(reader)?;
         }
 
         Ok(())
-    }
-
-    fn vec_to_u8(&self, buffer: &Vec<u8>) -> u8 {
-        buffer[0]
-    }
-
-    fn vec_to_u16(&self, buffer: &Vec<u8>) -> u16 {
-        let mut bytes = [0; 2];
-        bytes.copy_from_slice(&buffer[0..2]);
-        u16::from_be_bytes(bytes)
-    }
-
-    fn vec_to_u32(&self, buffer: &Vec<u8>) -> u32 {
-        let mut bytes = [0; 4];
-        bytes.copy_from_slice(&buffer[0..4]);
-        u32::from_be_bytes(bytes)
-    }
-
-    fn vec_to_u64(&self, buffer: &Vec<u8>) -> u64 {
-        let mut bytes = [0; 8];
-        bytes.copy_from_slice(&buffer[0..8]);
-        u64::from_be_bytes(bytes)
     }
 }
 

@@ -8,7 +8,7 @@ Java 8 specification can be found [here](https://docs.oracle.com/javase/specs/jv
 - [X] Read magic number
 - [X] Read minor version
 - [X] Read major version
-- [ ] Read constant pool
+- [ ] Read constant pool - **IN PROGRESS**
 - [ ] Read access flags
 - [ ] Read this class
 - [ ] Read super class
