@@ -1,6 +1,8 @@
 use crate::class_file::constant_pool::tag::ConstantPoolTag;
 use crate::class_file::constant_pool::types::class_info::ClassInfo;
 use crate::class_file::constant_pool::types::field_ref::FieldRef;
+use crate::class_file::constant_pool::types::float::Float;
+use crate::class_file::constant_pool::types::integer::Integer;
 use crate::class_file::constant_pool::types::interface_method_ref::InterfaceMethodRef;
 use crate::class_file::constant_pool::types::jvm_string::JvmString;
 use crate::class_file::constant_pool::types::method_ref::MethodRef;
@@ -15,6 +17,8 @@ enum ConstantPoolData {
     MethodRef(MethodRef),
     InterfaceMethodRef(InterfaceMethodRef),
     JvmString(JvmString),
+    Float(Float),
+    Integer(Integer),
 }
 
 pub struct ConstantPoolItem {
@@ -48,6 +52,13 @@ impl ConstantPoolItem {
             ConstantPoolTag::String => {
                 self.data = ConstantPoolData::JvmString(JvmString::from(reader)?);
             }
+            ConstantPoolTag::Float => {
+                self.data = ConstantPoolData::Float(Float::from(reader)?);
+            }
+            ConstantPoolTag::Integer => {
+                self.data = ConstantPoolData::Integer(Integer::from(reader)?);
+            }
+            ConstantPoolTag::Long => {}
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,
                 format!("Unsupported constant pool tag {:?}", self.tag),
