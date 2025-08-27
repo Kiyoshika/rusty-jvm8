@@ -8,5 +8,6 @@ pub mod jvm_string;
 pub mod long;
 pub mod method_handle;
 pub mod method_ref;
+pub mod method_type;
 pub mod name_and_type;
 pub mod utf8;
