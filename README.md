@@ -12,7 +12,8 @@ I almost never write Rust; I'm trying to give this language another chance - do 
 - [X] Read minor version
 - [X] Read major version
 - [X] Read constant pool
-  - [ ] Ensure all validations/constraints for each struct are satisfied according to spec descriptions in section 4.4 - [**IN PROGRESS**]
+  - [X] Write individual tests for each constant pool type
+  - [ ] Ensure all validations/constraints for each struct are satisfied according to spec descriptions in section 4.4 and tests are written - [**IN PROGRESS**]
 - [ ] Read access flags
 - [ ] Read this class
 - [ ] Read super class
