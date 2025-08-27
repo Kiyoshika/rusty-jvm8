@@ -2,6 +2,7 @@ use crate::class_file::constant_pool::tag::ConstantPoolTag;
 use crate::class_file::constant_pool::types::class_info::ClassInfo;
 use crate::class_file::constant_pool::types::field_ref::FieldRef;
 use crate::class_file::constant_pool::types::interface_method_ref::InterfaceMethodRef;
+use crate::class_file::constant_pool::types::jvm_string::JvmString;
 use crate::class_file::constant_pool::types::method_ref::MethodRef;
 use std::fs::File;
 use std::io;
@@ -13,6 +14,7 @@ enum ConstantPoolData {
     FieldRef(FieldRef),
     MethodRef(MethodRef),
     InterfaceMethodRef(InterfaceMethodRef),
+    JvmString(JvmString),
 }
 
 pub struct ConstantPoolItem {
@@ -42,6 +44,9 @@ impl ConstantPoolItem {
             }
             ConstantPoolTag::InterfaceMethodRef => {
                 self.data = ConstantPoolData::InterfaceMethodRef(InterfaceMethodRef::from(reader)?);
+            }
+            ConstantPoolTag::String => {
+                self.data = ConstantPoolData::JvmString(JvmString::from(reader)?);
             }
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,
