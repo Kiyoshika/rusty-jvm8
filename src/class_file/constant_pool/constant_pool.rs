@@ -1,7 +1,7 @@
 use crate::class_file::constant_pool::item::ConstantPoolItem;
 use crate::class_file::constant_pool::tag::ConstantPoolTag;
 use crate::util::file::read_bytes;
-use std::cmp::PartialEq;
+
 use std::fs::File;
 use std::io;
 use std::io::BufReader;

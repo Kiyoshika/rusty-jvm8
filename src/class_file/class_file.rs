@@ -89,7 +89,7 @@ impl ClassFile {
 
         // parse all constant pool items
         // constant pool starts at index 1 up to count - 1 (described in section 4.1)
-        for i in 1..constant_pool_count {
+        for _i in 1..constant_pool_count {
             self.constant_pool.parse_item_from_class_file(reader)?;
         }
 
