@@ -30,3 +30,24 @@ impl ClassInfo {
         Ok(class_info)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    pub fn read_valid_u16() {
+        let bytes = [0x02, 0x0A]; // 522
+        let mut reader = BufReader::new(bytes.as_ref());
+        let class_info = ClassInfo::from(&mut reader).unwrap();
+        assert_eq!(class_info.name_index(), 522);
+    }
+
+    #[test]
+    pub fn read_valid_u8() {
+        let bytes = [0x00, 0x05]; // 5
+        let mut reader = BufReader::new(bytes.as_ref());
+        let class_info = ClassInfo::from(&mut reader).unwrap();
+        assert_eq!(class_info.name_index(), 5);
+    }
+}

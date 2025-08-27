@@ -30,3 +30,28 @@ impl Long {
         Ok(long)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_long_parts() {
+        // high = 0x00000000, low = 0x00000001
+        let bytes = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let l = Long::from(&mut reader).unwrap();
+        assert_eq!(l.high_bytes, 0x00000000);
+        assert_eq!(l.low_bytes, 0x00000001);
+    }
+
+    #[test]
+    fn read_large_long_parts() {
+        // high = 0x89ABCDEF, low = 0x01234567
+        let bytes = [0x89, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let l = Long::from(&mut reader).unwrap();
+        assert_eq!(l.high_bytes, 0x89ABCDEF);
+        assert_eq!(l.low_bytes, 0x01234567);
+    }
+}

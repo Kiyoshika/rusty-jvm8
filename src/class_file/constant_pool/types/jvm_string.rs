@@ -28,3 +28,24 @@ impl JvmString {
         Ok(string)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_string_index() {
+        let bytes = [0x00, 0x02];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let s = JvmString::from(&mut reader).unwrap();
+        assert_eq!(s.string_index(), 2);
+    }
+
+    #[test]
+    fn read_large_string_index() {
+        let bytes = [0xFE, 0xDC]; // 0xFEDC
+        let mut reader = BufReader::new(bytes.as_ref());
+        let s = JvmString::from(&mut reader).unwrap();
+        assert_eq!(s.string_index(), 0xFEDC);
+    }
+}

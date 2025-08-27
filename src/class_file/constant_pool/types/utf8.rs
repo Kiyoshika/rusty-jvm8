@@ -55,3 +55,55 @@ impl Utf8 {
         Ok(utf8)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_zero_length() {
+        // length = 0, no bytes follow
+        let bytes = [0x00, 0x00];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let utf8 = Utf8::from(&mut reader).unwrap();
+        assert_eq!(utf8.length(), 0);
+        assert_eq!(utf8.bytes(), &[]);
+        assert_eq!(utf8.value(), "");
+    }
+
+    #[test]
+    fn read_small_length_one() {
+        // length = 1, byte = 0x01 (valid: not 0x00 and < 0xF0)
+        let bytes = [0x00, 0x01, 0x01];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let utf8 = Utf8::from(&mut reader).unwrap();
+        assert_eq!(utf8.length(), 1);
+        assert_eq!(utf8.bytes(), &[0x01]);
+    }
+
+    #[test]
+    fn read_large_length_three_edge_bytes() {
+        // length = 3, bytes near upper allowed boundary: 0xEE, 0xEF, 0x7F
+        let bytes = [0x00, 0x03, 0xEE, 0xEF, 0x7F];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let utf8 = Utf8::from(&mut reader).unwrap();
+        assert_eq!(utf8.length(), 3);
+        assert_eq!(utf8.bytes(), &[0xEE, 0xEF, 0x7F]);
+    }
+
+    #[test]
+    fn invalid_zero_byte_fails() {
+        // length = 1, byte = 0x00 is invalid per check
+        let bytes = [0x00, 0x01, 0x00];
+        let mut reader = BufReader::new(bytes.as_ref());
+        assert!(Utf8::from(&mut reader).is_err());
+    }
+
+    #[test]
+    fn invalid_high_range_fails() {
+        // length = 1, byte = 0xF0 is invalid per check
+        let bytes = [0x00, 0x01, 0xF0];
+        let mut reader = BufReader::new(bytes.as_ref());
+        assert!(Utf8::from(&mut reader).is_err());
+    }
+}

@@ -37,3 +37,28 @@ impl NameAndType {
         Ok(name_and_type)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_values() {
+        // name_index = 1, descriptor_index = 2
+        let bytes = [0x00, 0x01, 0x00, 0x02];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let nat = NameAndType::from(&mut reader).unwrap();
+        assert_eq!(nat.name_index(), 1);
+        assert_eq!(nat.descriptor_index(), 2);
+    }
+
+    #[test]
+    fn read_large_values() {
+        // name_index = 0xFFFE (65534), descriptor_index = 0xABCD (43981)
+        let bytes = [0xFF, 0xFE, 0xAB, 0xCD];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let nat = NameAndType::from(&mut reader).unwrap();
+        assert_eq!(nat.name_index(), 65534);
+        assert_eq!(nat.descriptor_index(), 0xABCD);
+    }
+}

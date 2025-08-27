@@ -25,3 +25,25 @@ impl MethodType {
         Ok(method_type)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_descriptor_index() {
+        let bytes = [0x00, 0x05];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let mt = MethodType::from(&mut reader).unwrap();
+        // access private field from child module allowed
+        assert_eq!(mt.descriptor_index, 5);
+    }
+
+    #[test]
+    fn read_large_descriptor_index() {
+        let bytes = [0xFE, 0xDC]; // 0xFEDC
+        let mut reader = BufReader::new(bytes.as_ref());
+        let mt = MethodType::from(&mut reader).unwrap();
+        assert_eq!(mt.descriptor_index, 0xFEDC);
+    }
+}

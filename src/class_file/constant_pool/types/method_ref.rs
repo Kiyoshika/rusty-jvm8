@@ -38,3 +38,28 @@ impl MethodRef {
         Ok(method_ref)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_indices() {
+        // class_index = 3, name_and_type_index = 7
+        let bytes = [0x00, 0x03, 0x00, 0x07];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let mr = MethodRef::from(&mut reader).unwrap();
+        assert_eq!(mr.class_index(), 3);
+        assert_eq!(mr.name_and_type_index(), 7);
+    }
+
+    #[test]
+    fn read_large_indices() {
+        // class_index = 0x8001, name_and_type_index = 0xFFEE
+        let bytes = [0x80, 0x01, 0xFF, 0xEE];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let mr = MethodRef::from(&mut reader).unwrap();
+        assert_eq!(mr.class_index(), 0x8001);
+        assert_eq!(mr.name_and_type_index(), 0xFFEE);
+    }
+}

@@ -30,3 +30,29 @@ impl InvokeDynamic {
         Ok(invoke_dynamic)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn read_small_indices() {
+        // bootstrap_method_attr_index = 1, name_and_type_index = 2
+        let bytes = [0x00, 0x01, 0x00, 0x02];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let indy = InvokeDynamic::from(&mut reader).unwrap();
+        // Private fields; accessible from child module
+        assert_eq!(indy.bootstrap_method_attr_index, 1);
+        assert_eq!(indy.name_and_type_index, 2);
+    }
+
+    #[test]
+    fn read_large_indices() {
+        // bootstrap_method_attr_index = 0xC0DE, name_and_type_index = 0xBEEF
+        let bytes = [0xC0, 0xDE, 0xBE, 0xEF];
+        let mut reader = BufReader::new(bytes.as_ref());
+        let indy = InvokeDynamic::from(&mut reader).unwrap();
+        assert_eq!(indy.bootstrap_method_attr_index, 0xC0DE);
+        assert_eq!(indy.name_and_type_index, 0xBEEF);
+    }
+}
