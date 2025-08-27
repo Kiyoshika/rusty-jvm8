@@ -9,6 +9,7 @@ use crate::class_file::constant_pool::types::jvm_string::JvmString;
 use crate::class_file::constant_pool::types::long::Long;
 use crate::class_file::constant_pool::types::method_ref::MethodRef;
 use crate::class_file::constant_pool::types::name_and_type::NameAndType;
+use crate::class_file::constant_pool::types::utf8::Utf8;
 use std::fs::File;
 use std::io;
 use std::io::BufReader;
@@ -25,6 +26,7 @@ enum ConstantPoolData {
     Long(Long),
     Double(Double),
     NameAndType(NameAndType),
+    Utf8(Utf8),
 }
 
 pub struct ConstantPoolItem {
@@ -72,6 +74,9 @@ impl ConstantPoolItem {
             }
             ConstantPoolTag::NameAndType => {
                 self.data = ConstantPoolData::NameAndType(NameAndType::from(reader)?);
+            }
+            ConstantPoolTag::Utf8 => {
+                self.data = ConstantPoolData::Utf8(Utf8::from(reader)?);
             }
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,
