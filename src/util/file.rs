@@ -4,7 +4,7 @@ use std::io::{BufReader, Read};
 
 pub fn read_bytes(
     reader: &mut BufReader<File>,
-    buffer: &mut Vec<u8>,
+    buffer: &mut [u8],
     n_bytes: usize,
 ) -> Result<(), io::Error> {
     let bytes_read = reader.read(buffer)?;

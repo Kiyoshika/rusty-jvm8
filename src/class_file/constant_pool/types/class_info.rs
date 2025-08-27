@@ -1,4 +1,4 @@
-use crate::util::bytes::vec_to_u16;
+use crate::util::bytes::buffer_to_u16;
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
@@ -16,9 +16,9 @@ impl ClassInfo {
 
     pub fn from(reader: &mut BufReader<File>) -> Result<ClassInfo, io::Error> {
         let mut class_info = ClassInfo::new();
-        let mut buffer = vec![0; 2];
+        let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
-        class_info.name_index = vec_to_u16(&buffer);
+        class_info.name_index = buffer_to_u16(buffer);
 
         Ok(class_info)
     }

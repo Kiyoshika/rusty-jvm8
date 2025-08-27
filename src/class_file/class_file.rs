@@ -1,5 +1,5 @@
 use crate::class_file::constant_pool::constant_pool::ConstantPool;
-use crate::util::bytes::{vec_to_u16, vec_to_u32};
+use crate::util::bytes::{buffer_to_u16, buffer_to_u32};
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
@@ -46,9 +46,9 @@ impl ClassFile {
     }
 
     fn parse_magic_number(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
-        let mut buffer = vec![0; 4];
+        let mut buffer: [u8; 4] = [0; 4];
         read_bytes(reader, &mut buffer, 4)?;
-        self.magic_number = vec_to_u32(&buffer);
+        self.magic_number = buffer_to_u32(buffer);
         if self.magic_number != 0xCAFEBABE {
             return Err(io::Error::new(io::ErrorKind::Other, "Invalid magic number"));
         }
@@ -57,16 +57,16 @@ impl ClassFile {
     }
 
     fn parse_minor_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
-        let mut buffer = vec![0; 2];
+        let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
-        self.minor_version = vec_to_u16(&buffer);
+        self.minor_version = buffer_to_u16(buffer);
         Ok(())
     }
 
     fn parse_major_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
-        let mut buffer = vec![0; 2];
+        let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
-        self.major_version = vec_to_u16(&buffer);
+        self.major_version = buffer_to_u16(buffer);
         if self.major_version > 52 {
             return Err(io::Error::new(
                 io::ErrorKind::Other,
@@ -78,9 +78,9 @@ impl ClassFile {
 
     fn parse_constant_pool(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         // first get size of constant pool
-        let mut buffer = vec![0; 2];
+        let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
-        let constant_pool_count = vec_to_u16(&buffer);
+        let constant_pool_count = buffer_to_u16(buffer);
         self.constant_pool.set_size(constant_pool_count);
 
         // parse all constant pool items
