@@ -5,6 +5,7 @@ use crate::class_file::constant_pool::types::field_ref::FieldRef;
 use crate::class_file::constant_pool::types::float::Float;
 use crate::class_file::constant_pool::types::integer::Integer;
 use crate::class_file::constant_pool::types::interface_method_ref::InterfaceMethodRef;
+use crate::class_file::constant_pool::types::invoke_dynamic::InvokeDynamic;
 use crate::class_file::constant_pool::types::jvm_string::JvmString;
 use crate::class_file::constant_pool::types::long::Long;
 use crate::class_file::constant_pool::types::method_handle::MethodHandle;
@@ -31,6 +32,7 @@ enum ConstantPoolData {
     Utf8(Utf8),
     MethodHandle(MethodHandle),
     MethodType(MethodType),
+    InvokeDynamic(InvokeDynamic),
 }
 
 pub struct ConstantPoolItem {
@@ -87,6 +89,9 @@ impl ConstantPoolItem {
             }
             ConstantPoolTag::MethodType => {
                 self.data = ConstantPoolData::MethodType(MethodType::from(reader)?);
+            }
+            ConstantPoolTag::InvokeDynamic => {
+                self.data = ConstantPoolData::InvokeDynamic(InvokeDynamic::from(reader)?);
             }
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,

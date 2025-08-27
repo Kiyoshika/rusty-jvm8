@@ -4,6 +4,7 @@ pub mod field_ref;
 pub mod float;
 pub mod integer;
 pub mod interface_method_ref;
+pub mod invoke_dynamic;
 pub mod jvm_string;
 pub mod long;
 pub mod method_handle;
