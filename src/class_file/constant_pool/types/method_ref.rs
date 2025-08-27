@@ -16,6 +16,14 @@ impl MethodRef {
         }
     }
 
+    pub fn class_index(&self) -> u16 {
+        self.class_index
+    }
+
+    pub fn name_and_type_index(&self) -> u16 {
+        self.name_and_type_index
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<MethodRef, io::Error> {
         let mut method_ref: MethodRef = MethodRef::new();
 

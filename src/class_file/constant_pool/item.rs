@@ -17,13 +17,13 @@ use std::fs::File;
 use std::io;
 use std::io::BufReader;
 
-enum ConstantPoolData {
+pub enum ConstantPoolData {
     Uninit, // only for uninitialized data
     ClassInfo(ClassInfo),
     FieldRef(FieldRef),
     MethodRef(MethodRef),
     InterfaceMethodRef(InterfaceMethodRef),
-    JvmString(JvmString),
+    String(JvmString),
     Float(Float),
     Integer(Integer),
     Long(Long),
@@ -48,6 +48,14 @@ impl ConstantPoolItem {
         }
     }
 
+    pub fn tag(&self) -> &ConstantPoolTag {
+        &self.tag
+    }
+
+    pub fn data(&self) -> &ConstantPoolData {
+        &self.data
+    }
+
     pub fn parse(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
         // delegate the parser based on the tag
         match self.tag {
@@ -64,7 +72,7 @@ impl ConstantPoolItem {
                 self.data = ConstantPoolData::InterfaceMethodRef(InterfaceMethodRef::from(reader)?);
             }
             ConstantPoolTag::String => {
-                self.data = ConstantPoolData::JvmString(JvmString::from(reader)?);
+                self.data = ConstantPoolData::String(JvmString::from(reader)?);
             }
             ConstantPoolTag::Float => {
                 self.data = ConstantPoolData::Float(Float::from(reader)?);

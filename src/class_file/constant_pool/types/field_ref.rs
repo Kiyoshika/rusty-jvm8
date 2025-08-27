@@ -16,6 +16,14 @@ impl FieldRef {
         }
     }
 
+    pub fn class_index(&self) -> u16 {
+        self.class_index
+    }
+
+    pub fn name_and_type_index(&self) -> u16 {
+        self.name_and_type_index
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<FieldRef, io::Error> {
         let mut field_ref: FieldRef = FieldRef::new();
 

@@ -16,6 +16,20 @@ impl Utf8 {
         }
     }
 
+    pub fn length(&self) -> u16 {
+        self.length
+    }
+
+    pub fn bytes(&self) -> &[u8] {
+        &self.bytes
+    }
+
+    /// Returns the UTF-8 decoded string value. For the current use-cases,
+    /// class file Modified UTF-8 specifics don't affect these literals.
+    pub fn value(&self) -> String {
+        String::from_utf8_lossy(&self.bytes).to_string()
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<Utf8, io::Error> {
         let mut utf8: Utf8 = Utf8::new();
 

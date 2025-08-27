@@ -14,6 +14,10 @@ impl ClassInfo {
         ClassInfo { name_index: 0 }
     }
 
+    pub fn name_index(&self) -> u16 {
+        self.name_index
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<ClassInfo, io::Error> {
         info!("Now Parsing ClassInfo");
         let mut class_info = ClassInfo::new();

@@ -16,15 +16,23 @@ impl NameAndType {
         }
     }
 
+    pub fn name_index(&self) -> u16 {
+        self.name_index
+    }
+
+    pub fn descriptor_index(&self) -> u16 {
+        self.descriptor_index
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<NameAndType, io::Error> {
         let mut name_and_type = NameAndType::new();
 
         let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
-        name_and_type.name_index = u16::from_le_bytes(buffer);
+        name_and_type.name_index = u16::from_be_bytes(buffer);
 
         read_bytes(reader, &mut buffer, 2)?;
-        name_and_type.descriptor_index = u16::from_le_bytes(buffer);
+        name_and_type.descriptor_index = u16::from_be_bytes(buffer);
 
         Ok(name_and_type)
     }

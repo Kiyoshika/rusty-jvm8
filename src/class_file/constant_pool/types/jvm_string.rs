@@ -14,6 +14,10 @@ impl JvmString {
         JvmString { string_index: 0 }
     }
 
+    pub fn string_index(&self) -> u16 {
+        self.string_index
+    }
+
     pub fn from(reader: &mut BufReader<File>) -> Result<JvmString, io::Error> {
         let mut string = JvmString::new();
 
