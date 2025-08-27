@@ -1,8 +1,8 @@
 use crate::util::file::read_bytes;
+use log::{debug, info};
 use std::fs::File;
 use std::io;
 use std::io::BufReader;
-use log::{debug, info};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ClassInfo {

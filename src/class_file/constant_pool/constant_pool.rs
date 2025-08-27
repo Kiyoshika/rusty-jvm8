@@ -52,7 +52,10 @@ impl ConstantPool {
         if tag == ConstantPoolTag::Unknown {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
-                format!("Unknown tag with value {:?} encountered while reading constant pool.", buffer[0]),
+                format!(
+                    "Unknown tag with value {:?} encountered while reading constant pool.",
+                    buffer[0]
+                ),
             ));
         }
 

@@ -1,9 +1,9 @@
 use crate::class_file::constant_pool::constant_pool::ConstantPool;
 use crate::util::file::read_bytes;
+use log::info;
 use std::fs::File;
 use std::io;
 use std::io::BufReader;
-use log::info;
 
 pub struct ClassFile {
     magic_number: u32,
