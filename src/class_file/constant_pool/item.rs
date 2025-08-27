@@ -1,5 +1,6 @@
 use crate::class_file::constant_pool::tag::ConstantPoolTag;
 use crate::class_file::constant_pool::types::class_info::ClassInfo;
+use crate::class_file::constant_pool::types::field_ref::FieldRef;
 use std::fs::File;
 use std::io;
 use std::io::BufReader;
@@ -7,6 +8,7 @@ use std::io::BufReader;
 enum ConstantPoolData {
     Uninit, // only for uninitialized data
     ClassInfo(ClassInfo),
+    FieldRef(FieldRef),
 }
 
 pub struct ConstantPoolItem {
@@ -27,6 +29,9 @@ impl ConstantPoolItem {
         match self.tag {
             ConstantPoolTag::Class => {
                 self.data = ConstantPoolData::ClassInfo(ClassInfo::from(reader)?);
+            }
+            ConstantPoolTag::FieldRef => {
+                self.data = ConstantPoolData::FieldRef(FieldRef::from(reader)?);
             }
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,
