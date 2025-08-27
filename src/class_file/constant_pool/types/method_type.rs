@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct MethodType {
     descriptor_index: u16,
@@ -14,7 +14,7 @@ impl MethodType {
         }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<MethodType, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<MethodType, io::Error> {
         let mut method_type: MethodType = MethodType::new();
 
         let mut buffer: [u8; 2] = [0; 2];

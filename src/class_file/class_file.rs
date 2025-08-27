@@ -3,7 +3,7 @@ use crate::util::file::read_bytes;
 use log::info;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct ClassFile {
     magic_number: u32,
@@ -49,7 +49,7 @@ impl ClassFile {
         Ok(())
     }
 
-    fn parse_magic_number(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+    fn parse_magic_number(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
         let mut buffer: [u8; 4] = [0; 4];
         read_bytes(reader, &mut buffer, 4)?;
         self.magic_number = u32::from_be_bytes(buffer);
@@ -60,14 +60,14 @@ impl ClassFile {
         Ok(())
     }
 
-    fn parse_minor_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+    fn parse_minor_version(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
         let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
         self.minor_version = u16::from_be_bytes(buffer);
         Ok(())
     }
 
-    fn parse_major_version(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+    fn parse_major_version(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
         let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
         self.major_version = u16::from_be_bytes(buffer);
@@ -80,7 +80,7 @@ impl ClassFile {
         Ok(())
     }
 
-    fn parse_constant_pool(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+    fn parse_constant_pool(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
         // first get size of constant pool
         let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;

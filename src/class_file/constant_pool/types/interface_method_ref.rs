@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct InterfaceMethodRef {
     class_index: u16,
@@ -16,7 +16,7 @@ impl InterfaceMethodRef {
         }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<InterfaceMethodRef, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<InterfaceMethodRef, io::Error> {
         let mut interface_method_ref: InterfaceMethodRef = InterfaceMethodRef::new();
 
         let mut buffer: [u8; 2] = [0; 2];

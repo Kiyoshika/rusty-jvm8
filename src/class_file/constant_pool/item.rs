@@ -15,7 +15,7 @@ use crate::class_file::constant_pool::types::name_and_type::NameAndType;
 use crate::class_file::constant_pool::types::utf8::Utf8;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub enum ConstantPoolData {
     Uninit, // only for uninitialized data
@@ -56,7 +56,7 @@ impl ConstantPoolItem {
         &self.data
     }
 
-    pub fn parse(&mut self, reader: &mut BufReader<File>) -> Result<(), io::Error> {
+    pub fn parse(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
         // delegate the parser based on the tag
         match self.tag {
             ConstantPoolTag::Class => {

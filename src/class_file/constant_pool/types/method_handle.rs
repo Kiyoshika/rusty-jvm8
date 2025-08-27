@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 #[derive(Eq, PartialEq)]
 enum ReferenceKind {
@@ -29,7 +29,7 @@ impl MethodHandle {
         }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<MethodHandle, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<MethodHandle, io::Error> {
         let mut method_handle = MethodHandle::new();
 
         let mut buffer: [u8; 2] = [0; 2];

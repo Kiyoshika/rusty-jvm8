@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 /// Named JvmString to avoid ambiguity with String.
 /// Represents constant objects of String type.
@@ -18,7 +18,7 @@ impl JvmString {
         self.string_index
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<JvmString, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<JvmString, io::Error> {
         let mut string = JvmString::new();
 
         let mut buffer: [u8; 2] = [0; 2];

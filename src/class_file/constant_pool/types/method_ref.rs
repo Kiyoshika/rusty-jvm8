@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct MethodRef {
     class_index: u16,
@@ -24,7 +24,7 @@ impl MethodRef {
         self.name_and_type_index
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<MethodRef, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<MethodRef, io::Error> {
         let mut method_ref: MethodRef = MethodRef::new();
 
         let mut buffer: [u8; 2] = [0; 2];

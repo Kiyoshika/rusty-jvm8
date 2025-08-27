@@ -2,7 +2,7 @@ use crate::util::file::read_bytes;
 use log::{debug, info};
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ClassInfo {
@@ -18,7 +18,7 @@ impl ClassInfo {
         self.name_index
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<ClassInfo, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<ClassInfo, io::Error> {
         info!("Now Parsing ClassInfo");
         let mut class_info = ClassInfo::new();
         let mut buffer: [u8; 2] = [0; 2];

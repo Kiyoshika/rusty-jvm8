@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct InvokeDynamic {
     bootstrap_method_attr_index: u16,
@@ -16,7 +16,7 @@ impl InvokeDynamic {
         }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<InvokeDynamic, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<InvokeDynamic, io::Error> {
         let mut invoke_dynamic = InvokeDynamic::new();
 
         let mut buffer: [u8; 2] = [0; 2];

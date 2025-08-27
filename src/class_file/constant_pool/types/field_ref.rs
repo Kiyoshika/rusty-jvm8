@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct FieldRef {
     class_index: u16,
@@ -24,7 +24,7 @@ impl FieldRef {
         self.name_and_type_index
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<FieldRef, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<FieldRef, io::Error> {
         let mut field_ref: FieldRef = FieldRef::new();
 
         let mut buffer: [u8; 2] = [0; 2];

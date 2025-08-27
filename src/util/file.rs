@@ -3,7 +3,7 @@ use std::io;
 use std::io::{BufReader, Read};
 
 pub fn read_bytes(
-    reader: &mut BufReader<File>,
+    reader: &mut BufReader<impl Read>,
     buffer: &mut [u8],
     n_bytes: usize,
 ) -> Result<(), io::Error> {

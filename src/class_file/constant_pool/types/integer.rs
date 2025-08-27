@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct Integer {
     bytes: u32,
@@ -12,7 +12,7 @@ impl Integer {
         Integer { bytes: 0 }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<Integer, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<Integer, io::Error> {
         let mut integer = Integer::new();
 
         let mut buffer: [u8; 4] = [0; 4];

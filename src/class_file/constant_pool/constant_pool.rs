@@ -4,7 +4,7 @@ use crate::util::file::read_bytes;
 
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct ConstantPool {
     count: u16,
@@ -33,7 +33,7 @@ impl ConstantPool {
 
     pub fn parse_item_from_class_file(
         &mut self,
-        reader: &mut BufReader<File>,
+        reader: &mut BufReader<impl Read>,
     ) -> Result<(), io::Error> {
         // read the tag
         // TODO: convert this to stack buffer

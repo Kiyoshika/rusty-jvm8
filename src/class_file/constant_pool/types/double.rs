@@ -1,7 +1,7 @@
 use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 
 pub struct Double {
     high_bytes: u32,
@@ -16,7 +16,7 @@ impl Double {
         }
     }
 
-    pub fn from(reader: &mut BufReader<File>) -> Result<Double, io::Error> {
+    pub fn from(reader: &mut BufReader<impl Read>) -> Result<Double, io::Error> {
         let mut double: Double = Double::new();
 
         let mut buffer: [u8; 4] = [0; 4];
