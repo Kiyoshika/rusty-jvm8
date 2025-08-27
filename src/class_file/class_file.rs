@@ -108,21 +108,21 @@ mod tests {
     }
 
     #[test]
-    fn parse_magic_number() {
+    fn parse_valid_file() {
         let mut class_file = ClassFile::new();
         class_file
             .read_file("tests/java/helloworld/HelloWorld.class")
             .unwrap();
         assert_eq!(class_file.magic_number, 0xCAFEBABE);
-    }
-
-    #[test]
-    fn parse_major_version() {
-        let mut class_file = ClassFile::new();
-        class_file
-            .read_file("tests/java/helloworld/HelloWorld.class")
-            .unwrap();
         assert_eq!(class_file.major_version, 52);
+        assert_eq!(class_file.minor_version, 0);
+        assert_eq!(class_file.constant_pool.count(), 29);
+        // constant pool starts at index 1 up to count - 1 (described in section 4.1)
+        // so we expect 28 items
+        assert_eq!(
+            class_file.constant_pool.items().len(),
+            class_file.constant_pool.count() - 1
+        );
     }
 
     #[test]

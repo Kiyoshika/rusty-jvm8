@@ -23,6 +23,14 @@ impl ConstantPool {
         self.count = size;
     }
 
+    pub fn count(&self) -> usize {
+        self.count as usize
+    }
+
+    pub fn items(&self) -> &[ConstantPoolItem] {
+        &self.items
+    }
+
     pub fn parse_item_from_class_file(
         &mut self,
         reader: &mut BufReader<File>,
