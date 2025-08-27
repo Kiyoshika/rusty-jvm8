@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io;
-use std::io::{BufReader, Read};
+use std::io::{BufRead, BufReader, Read};
 
 pub fn read_bytes(
     reader: &mut BufReader<File>,

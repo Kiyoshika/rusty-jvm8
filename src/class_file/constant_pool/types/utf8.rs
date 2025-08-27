@@ -23,6 +23,8 @@ impl Utf8 {
         read_bytes(reader, &mut buffer, 2)?;
         utf8.length = u16::from_be_bytes(buffer);
 
+        // allocate space for bytes and read content
+        utf8.bytes.resize(utf8.length as usize, 0);
         read_bytes(reader, &mut utf8.bytes, utf8.length as usize)?;
 
         // verify byte values

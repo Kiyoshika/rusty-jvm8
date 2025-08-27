@@ -3,6 +3,7 @@ use crate::util::file::read_bytes;
 use std::fs::File;
 use std::io;
 use std::io::BufReader;
+use log::info;
 
 pub struct ClassFile {
     magic_number: u32,
@@ -33,6 +34,8 @@ impl ClassFile {
     /// }
     /// ```
     pub fn read_file(&mut self, file_path: &str) -> Result<(), io::Error> {
+        info!("Now reading class file {file_path}");
+
         let file = File::open(file_path)?;
         let mut reader = BufReader::new(file);
 
@@ -40,6 +43,8 @@ impl ClassFile {
         self.parse_minor_version(&mut reader)?;
         self.parse_major_version(&mut reader)?;
         self.parse_constant_pool(&mut reader)?;
+
+        info!("Finished reading class file {file_path}");
 
         Ok(())
     }
@@ -83,7 +88,8 @@ impl ClassFile {
         self.constant_pool.set_size(constant_pool_count);
 
         // parse all constant pool items
-        for i in 0..constant_pool_count {
+        // constant pool starts at index 1 up to count - 1 (described in section 4.1)
+        for i in 1..constant_pool_count {
             self.constant_pool.parse_item_from_class_file(reader)?;
         }
 

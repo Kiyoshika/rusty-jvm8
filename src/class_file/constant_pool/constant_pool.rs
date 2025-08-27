@@ -28,6 +28,7 @@ impl ConstantPool {
         reader: &mut BufReader<File>,
     ) -> Result<(), io::Error> {
         // read the tag
+        // TODO: convert this to stack buffer
         let mut buffer = vec![0; 1];
         read_bytes(reader, &mut buffer, 1)?;
         let tag = match buffer[0] {
@@ -51,7 +52,7 @@ impl ConstantPool {
         if tag == ConstantPoolTag::Unknown {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
-                "Unknown tag encountered while reading constant pool.",
+                format!("Unknown tag with value {:?} encountered while reading constant pool.", buffer[0]),
             ));
         }
 
