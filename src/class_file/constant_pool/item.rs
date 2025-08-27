@@ -7,6 +7,7 @@ use crate::class_file::constant_pool::types::integer::Integer;
 use crate::class_file::constant_pool::types::interface_method_ref::InterfaceMethodRef;
 use crate::class_file::constant_pool::types::jvm_string::JvmString;
 use crate::class_file::constant_pool::types::long::Long;
+use crate::class_file::constant_pool::types::method_handle::MethodHandle;
 use crate::class_file::constant_pool::types::method_ref::MethodRef;
 use crate::class_file::constant_pool::types::name_and_type::NameAndType;
 use crate::class_file::constant_pool::types::utf8::Utf8;
@@ -27,6 +28,7 @@ enum ConstantPoolData {
     Double(Double),
     NameAndType(NameAndType),
     Utf8(Utf8),
+    MethodHandle(MethodHandle),
 }
 
 pub struct ConstantPoolItem {
@@ -77,6 +79,9 @@ impl ConstantPoolItem {
             }
             ConstantPoolTag::Utf8 => {
                 self.data = ConstantPoolData::Utf8(Utf8::from(reader)?);
+            }
+            ConstantPoolTag::MethodHandle => {
+                self.data = ConstantPoolData::MethodHandle(MethodHandle::from(reader)?);
             }
             _ => Err(io::Error::new(
                 io::ErrorKind::Other,
