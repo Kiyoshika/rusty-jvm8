@@ -11,8 +11,8 @@ I almost never write Rust; I'm trying to give this language another chance - do 
 - [X] Read magic number
 - [X] Read minor version
 - [X] Read major version
-- [ ] Read constant pool - **IN PROGRESS**
-  - [ ] Ensure all validations/constraints for each struct are satisfied
+- [X] Read constant pool
+  - [ ] Ensure all validations/constraints for each struct are satisfied according to spec descriptions in section 4.4 - [**IN PROGRESS**]
 - [ ] Read access flags
 - [ ] Read this class
 - [ ] Read super class
