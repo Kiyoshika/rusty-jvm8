@@ -85,7 +85,7 @@ impl ClassFile {
         let mut buffer: [u8; 2] = [0; 2];
         read_bytes(reader, &mut buffer, 2)?;
         let constant_pool_count = u16::from_be_bytes(buffer);
-        self.constant_pool.set_size(constant_pool_count);
+        self.constant_pool.set_count(constant_pool_count);
 
         // parse all constant pool items
         // constant pool starts at index 1 up to count - 1 (described in section 4.1)
@@ -124,7 +124,7 @@ mod tests {
         // so we expect 28 items
         assert_eq!(
             class_file.constant_pool.items().len(),
-            class_file.constant_pool.count() - 1
+            (class_file.constant_pool.count() - 1) as usize
         );
 
         // verify constant pool items in order

@@ -1,3 +1,4 @@
+use crate::class_file::constant_pool::constant_pool::ConstantPool;
 use crate::class_file::constant_pool::tag::ConstantPoolTag;
 use crate::class_file::constant_pool::types::class_info::ClassInfo;
 use crate::class_file::constant_pool::types::double::Double;
@@ -56,11 +57,15 @@ impl ConstantPoolItem {
         &self.data
     }
 
-    pub fn parse(&mut self, reader: &mut BufReader<impl Read>) -> Result<(), io::Error> {
+    pub fn parse(
+        &mut self,
+        reader: &mut BufReader<impl Read>,
+        constant_pool: &ConstantPool,
+    ) -> Result<(), io::Error> {
         // delegate the parser based on the tag
         match self.tag {
             ConstantPoolTag::Class => {
-                self.data = ConstantPoolData::ClassInfo(ClassInfo::from(reader)?);
+                self.data = ConstantPoolData::ClassInfo(ClassInfo::from(reader, constant_pool)?);
             }
             ConstantPoolTag::FieldRef => {
                 self.data = ConstantPoolData::FieldRef(FieldRef::from(reader)?);

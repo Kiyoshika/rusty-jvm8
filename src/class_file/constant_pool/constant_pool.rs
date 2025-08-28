@@ -19,12 +19,19 @@ impl ConstantPool {
         }
     }
 
-    pub fn set_size(&mut self, size: u16) {
+    pub fn set_count(&mut self, size: u16) {
         self.count = size;
     }
 
-    pub fn count(&self) -> usize {
-        self.count as usize
+    pub fn max_constant_pool_index(&self) -> u16 {
+        if self.count() == 0 {
+            return 0;
+        }
+        self.count() - 1
+    }
+
+    pub fn count(&self) -> u16 {
+        self.count
     }
 
     pub fn items(&self) -> &[ConstantPoolItem] {
@@ -68,7 +75,7 @@ impl ConstantPool {
         }
 
         let mut item = ConstantPoolItem::new(tag);
-        item.parse(reader)?;
+        item.parse(reader, &self)?;
 
         self.items.push(item);
         Ok(())
